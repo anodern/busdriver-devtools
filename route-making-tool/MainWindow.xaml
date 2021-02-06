@@ -5,9 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:route_making_tool"
         mc:Ignorable="d"
-        Title="Route制作 by anodern" Height="371" Width="479" Drop="Window_Drop" FontSize="14" AllowDrop="True" ResizeMode="CanMinimize" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
+        Title="Route制作工具 by anodern" Height="371" Width="479" Drop="Window_Drop" FontSize="14" AllowDrop="True" ResizeMode="CanMinimize" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Label Content="       Route制作" Height="50" VerticalAlignment="Top" FontSize="30" Background="#FF2C6FFF" Foreground="White"/>
+        <Label Content="    Route制作工具" Height="57" VerticalAlignment="Top" FontSize="30" Foreground="White">
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0084F1" Offset="0"/>
+                    <GradientStop Offset="1" Color="#0000A2FF"/>
+                    <GradientStop Color="#FF23AFFF" Offset="0.539"/>
+                </LinearGradientBrush>
+            </Label.Background>
+        </Label>
         <Label Content="线路" HorizontalAlignment="Left" Height="27" Margin="13,57,0,0" VerticalAlignment="Top" Width="37"/>
         <TextBox x:Name="txt_mission" HorizontalAlignment="Left" Height="27" Margin="55,57,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="100" TextAlignment="Justify" Padding="0,3,0,0" FontSize="12" TextChanged="txt_mission_TextChanged"/>
         <Label Content="地图" HorizontalAlignment="Left" Height="27" Margin="161,57,0,0" VerticalAlignment="Top" Width="38"/>
@@ -47,9 +55,9 @@
         <ComboBox x:Name="skyList" HorizontalAlignment="Left" Height="27" Margin="55,89,0,0" VerticalAlignment="Top" Width="100"/>
         <Label Content="光照" HorizontalAlignment="Left" Height="27" Margin="161,89,0,0" VerticalAlignment="Top" Width="38"/>
         <ComboBox x:Name="sunList" HorizontalAlignment="Left" Height="27" Margin="204,89,0,0" VerticalAlignment="Top" Width="100"/>
-        <Image HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="logo_white.png" Margin="10,5,0,0"/>
         <CheckBox x:Name="priCheck" Content="囚车" HorizontalAlignment="Left" Margin="316,95,0,0" VerticalAlignment="Top"/>
         <Label Content="Copyright © 2021 anodern. All rights reserved.   www.anodern.com" Margin="13,0,97,0" Height="19" VerticalAlignment="Bottom" FontSize="10" VerticalContentAlignment="Bottom" Padding="5,3"/>
+        <Label Content="by anodern" Height="23" Margin="398,20,0,0" VerticalAlignment="Top" Foreground="White" FontSize="10"/>
 
     </Grid>
 </Window>

@@ -16,7 +16,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
-using BusDriverFile;
 using System.Text.RegularExpressions;
 
 namespace route_table {
@@ -73,9 +72,17 @@ namespace route_table {
                 List<string> routesPath = new List<string>();
 
                 foreach(ZipArchiveEntry entry in zip.Entries) {
-                    if(entry.FullName.StartsWith("def/route/", StringComparison.OrdinalIgnoreCase)) {
-                        if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
-                            routesPath.Add(entry.FullName);
+                    if(entry.FullName[0].Equals('/')) {
+                        if(entry.FullName.StartsWith("/def/route/", StringComparison.OrdinalIgnoreCase)) {
+                            if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
+                                routesPath.Add(entry.FullName);
+                            }
+                        }
+                    } else {
+                        if(entry.FullName.StartsWith("def/route/", StringComparison.OrdinalIgnoreCase)) {
+                            if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
+                                routesPath.Add(entry.FullName);
+                            }
                         }
                     }
                 }

@@ -58,6 +58,14 @@ namespace route_table {
         private readonly Label[,] routeLabelTable = new Label[MAX_TIER, MAX_RANK];
         private RouteData selectedData;
 
+        private int CountChar(string source, char chr) {
+            int count = 0;
+            foreach(char c in source) {
+                if(c == chr) count++;
+            }
+            return count;
+        }
+
         private void btn_load_Click(object sender, RoutedEventArgs e) {
             if(!File.Exists("base.scs")) {
                 MessageBox.Show("找不到base.scs");
@@ -67,18 +75,32 @@ namespace route_table {
             routeDataTable = new RouteData[MAX_TIER, MAX_RANK];
             selectedData = null;
             routeList.Items.Clear();
+            combo_vehicle.Items.Clear();
 
             using(ZipArchive zip = ZipFile.Open("base.scs", ZipArchiveMode.Read)) {
                 List<string> routesPath = new List<string>();
+                List<string> vehiclePath = new List<string>();
 
                 foreach(ZipArchiveEntry entry in zip.Entries) {
                     if(entry.FullName[0].Equals('/')) {
+                        if(entry.FullName.StartsWith("/vehicle/driveable/", StringComparison.OrdinalIgnoreCase)) {
+                            if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
+                                if(CountChar(entry.FullName, '/') != 3) continue;
+                                vehiclePath.Add(entry.FullName);
+                            }
+                        }
                         if(entry.FullName.StartsWith("/def/route/", StringComparison.OrdinalIgnoreCase)) {
                             if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
                                 routesPath.Add(entry.FullName);
                             }
                         }
                     } else {
+                        if(entry.FullName.StartsWith("vehicle/driveable/", StringComparison.OrdinalIgnoreCase)) {
+                            if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
+                                if(CountChar(entry.FullName, '/') != 2) continue;
+                                vehiclePath.Add(entry.FullName);
+                            }
+                        }
                         if(entry.FullName.StartsWith("def/route/", StringComparison.OrdinalIgnoreCase)) {
                             if(entry.FullName.EndsWith(".sii", StringComparison.OrdinalIgnoreCase)) {
                                 routesPath.Add(entry.FullName);
@@ -89,15 +111,29 @@ namespace route_table {
 
                 Match match;
                 string all;
+                //combo_vehicle.Items.Add("-");
+                foreach(string s in vehiclePath) {
+                    using(StreamReader sr = new StreamReader(zip.GetEntry(s).Open())) {
+                        all = sr.ReadToEnd();
+                    }
+                    //正则匹配车型
+                    match = Regex.Match(all, @"^[\s\S]+driveable_vehicle_data\s*:\s*vehicle.(\S+)\s*{[\s\S]+$");
+                    if(!match.Success) {
+                        MessageBox.Show("车型'"+s+"'可能格式存在问题");
+                        continue;
+                    }
+                    combo_vehicle.Items.Add(match.Groups[1].Value.ToLower());
+                }
+
+
                 foreach(string s in routesPath) {
                     using(StreamReader sr = new StreamReader(zip.GetEntry(s).Open())) {
                         all = sr.ReadToEnd();
                     }
                     //正则匹配线路
-                    match = Regex.Match(all, @"^[\s\S]+mission\s*:\s*mission.(\S+)\s*{[\s\S]+tier:\s*(\d+)[\s\S]+rank:\s*(\d+)[\s\S]+vehicle_data:\s*vehicle.(\S+)[\s\S]+$");
+                    match = Regex.Match(all, @"^[\s\S]+mission\s*:\s*mission.(\S+)\s*{[\s\S]+tier\s*:\s*(\d+)[\s\S]+rank\s*:\s*(\d+)[\s\S]+vehicle_data\s*:\s*vehicle.(\S+)[\s\S]+$");
                     if(!match.Success) {
-                        //Debug.WriteLine("Match failed:"+s);
-                        MessageBox.Show("线路'"+s+"'可能存在问题");
+                        MessageBox.Show("线路'"+s+"'可能格式存在问题");
                         continue;
                     }
                     if(!byte.TryParse(match.Groups[2].Value, out byte tier)) {
@@ -107,7 +143,7 @@ namespace route_table {
                         rank = 10;
                     }
 
-                    RouteData data = new RouteData(s, match.Groups[1].Value, tier, rank, match.Groups[4].Value);
+                    RouteData data = new RouteData(s, match.Groups[1].Value, tier, rank, match.Groups[4].Value.ToLower());
                     dataList.Add(data);
                     //Debug.WriteLine(data);
 
@@ -130,13 +166,10 @@ namespace route_table {
             btn_save.IsEnabled = true;
         }
         private void btn_save_Click(object sender, RoutedEventArgs e) {
-            //string dirName = DateTime.Now.ToString("yyyyMMddHHmmss");
-            //Directory.CreateDirectory(dirName);
-
             using(ZipArchive archive = ZipFile.Open("base.scs", ZipArchiveMode.Update,Encoding.GetEncoding(936))) {
                 foreach(RouteData data in dataList) {
                     //跳过未修改的线路
-                    if(data.Tier == data.TierP && data.Rank == data.RankP) continue;
+                    if(data.Tier == data.TierP && data.Rank == data.RankP && data.VehicleP.Equals(data.Vehicle)) continue;
 
                     string routeContext;
                     ZipArchiveEntry entry = archive.GetEntry(data.FullName);
@@ -144,12 +177,9 @@ namespace route_table {
                         routeContext = sr.ReadToEnd();
                     }
                     routeContext = Regex.Replace(routeContext,
-                        @"^([\s\S]+tier:\s*)\d+([\s\S]+rank:\s*)\d+([\s\S]+)$",
-                        "${1}"+data.Tier+"${2}"+data.Rank+"${3}");
+                        @"^([\s\S]+tier\s*:\s*)\d+([\s\S]+rank\s*:\s*)\d+([\s\S]+vehicle_data\s*:\s*vehicle.)\S+([\s\S]+)$",
+                        "${1}"+data.Tier+"${2}"+data.Rank+"${3}"+data.Vehicle+"${4}");
 
-                    /*using(StreamWriter sw = new StreamWriter(dirName+data.FullName.Substring(9),false,Encoding.GetEncoding(936))) {
-                        sw.Write(routeContext);
-                    }*/
 
                     using(StreamWriter writer = new StreamWriter(entry.Open())) {
                         writer.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -157,15 +187,28 @@ namespace route_table {
                         writer.Write(routeContext);
                     }
                     entry.LastWriteTime = DateTimeOffset.UtcNow.LocalDateTime;
+
+                    data.ResetP();
                 }
             }
             MessageBox.Show("已保存到base.scs");
-            
-            //Debug.WriteLine("Done");
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 
+        private void SetSelectedData() {
+            if(selectedData == null) {
+                label_name.Content = string.Empty;
+                floatLabel.Content = string.Empty;
+                combo_vehicle.SelectedIndex=-1;
+                return;
+            }
+            if(combo_vehicle.Items.Contains(selectedData.Vehicle)) {
+                combo_vehicle.SelectedItem = selectedData.Vehicle;
+            } else {
+                MessageBox.Show(string.Format("线路'{0}'使用了不支持的车型'{1}'",selectedData.Name,selectedData.Vehicle),"提示");
+            }
+            label_name.Content = selectedData.Name;
+            floatLabel.Content = selectedData.Name;
         }
 
         void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
@@ -176,16 +219,18 @@ namespace route_table {
             byte rank = byte.Parse(sp[2]);
 
             //Debug.WriteLine("点击了表格 tier:"+tier+" rank:"+rank);
+            combo_vehicle.IsEnabled=true;  //点击表格区，启用车型
 
             selectedData = routeDataTable[tier, rank];
+            SetSelectedData();
             if(selectedData==null) return;
+
 
             //启用拖动
             isDragDropInEffect = true;
             pos = e.GetPosition(null);
             floatLabel.Visibility = Visibility.Visible;
             Point mousePos = Mouse.GetPosition(canvas);
-            floatLabel.Content = selectedData.Name;
             floatLabel.CaptureMouse();
             floatLabel.SetValue(Canvas.LeftProperty, mousePos.X-(floatLabel.ActualWidth/2));
             floatLabel.SetValue(Canvas.TopProperty, mousePos.Y-(floatLabel.ActualHeight/2));
@@ -198,8 +243,9 @@ namespace route_table {
             public byte Tier { get; set; }
             public byte Rank { get; set; }
             public string Vehicle { get; set; }
-            public byte TierP { get; }
-            public byte RankP { get; }
+            public byte TierP { get; private set; }
+            public byte RankP { get; private set; }
+            public string VehicleP { get; private set; }
 
             public RouteData(string fna,string na,byte tier,byte rank,string veh) {
                 FullName = fna;
@@ -209,11 +255,18 @@ namespace route_table {
                 Vehicle = veh;
                 TierP = tier;
                 RankP = rank;
+                VehicleP = veh;
             }
 
             public string GetLabel() {
                 return Name +"\n"+ Vehicle;
                 //return string.Format("{0}\n{1}\n({2},{3})", Name, Vehicle, Tier, Rank);
+            }
+
+            public void ResetP() {
+                TierP = Tier;
+                RankP = Rank;
+                VehicleP = Vehicle;
             }
 
             public override string ToString() {
@@ -222,21 +275,38 @@ namespace route_table {
         }
 
         private void routeList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            selectedData = (RouteData)routeList.SelectedItem;
-            if(selectedData == null) return;
-            floatLabel.Content = selectedData.Name;
-
             if(listMouseIn) {
+                if(routeList.SelectedItem == null) return;
+                else selectedData = (RouteData)routeList.SelectedItem;
+
+
+                combo_vehicle.IsEnabled=false;    //点击候选区，禁用车型
+                SetSelectedData();
+
                 //将label放在鼠标下
                 floatLabel.Visibility = Visibility.Visible;
 
                 isDragDropInEffect = true;
                 Point mousePos = Mouse.GetPosition(canvas);
-                floatLabel.Content = selectedData.Name;
                 floatLabel.CaptureMouse();
                 floatLabel.SetValue(Canvas.LeftProperty, mousePos.X-(floatLabel.ActualWidth/2));
                 floatLabel.SetValue(Canvas.TopProperty, mousePos.Y-(floatLabel.ActualHeight/2));
                 floatLabel.Cursor = Cursors.Hand;
+            }
+        }
+
+        private void vehicleCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if(selectedData != null) {
+                selectedData.Vehicle = (string)combo_vehicle.SelectedItem;
+                RefreshLabel(selectedData.Tier, selectedData.Rank);
+            }
+        }
+
+        private void RefreshLabel(byte tier,byte rank) {
+            if(tier>=MAX_TIER || rank>=MAX_RANK) {
+                routeList.Items.Refresh();
+            } else {
+                routeLabelTable[tier, rank].Content = routeDataTable[tier, rank].GetLabel();
             }
         }
 
@@ -253,14 +323,6 @@ namespace route_table {
             }
         }
 
-        private void floatLabel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            if(selectedData==null) return;
-            isDragDropInEffect = true;
-            pos = e.GetPosition(null);
-            floatLabel.CaptureMouse();
-            floatLabel.Cursor = Cursors.Hand;
-        }
-
         private void floatLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             if(isDragDropInEffect) {
                 isDragDropInEffect = false;
@@ -269,8 +331,6 @@ namespace route_table {
 
                 Point pO = routeGrid.TranslatePoint(new Point(0, 0), canvas);
 
-                floatLabel.SetValue(Canvas.LeftProperty, 103.0);
-                floatLabel.SetValue(Canvas.TopProperty, 12.0);
 
                 if(pos.X<pO.X || pos.Y<pO.Y || pos.X > pO.X+routeGrid.ActualWidth || pos.Y > pO.Y+routeGrid.ActualHeight) {
                     //落在外围
@@ -329,7 +389,7 @@ namespace route_table {
                                 routeDataTable[tier, rank].Rank = rank;
 
                                 routeLabelTable[fromTier, fromRank].Content = string.Empty;
-                                routeLabelTable[tier, rank].Content = routeDataTable[tier, rank].GetLabel();
+                                RefreshLabel(tier, rank);
 
                             } else {
 
@@ -340,14 +400,14 @@ namespace route_table {
                                 routeDataTable[tier, rank].Tier = tier;
                                 routeDataTable[tier, rank].Rank = rank;
 
-                                routeLabelTable[fromTier, fromRank].Content = routeDataTable[fromTier, fromRank].GetLabel();
-                                routeLabelTable[tier, rank].Content = routeDataTable[tier, rank].GetLabel();
+                                RefreshLabel(fromTier, fromRank);
+                                RefreshLabel(tier, rank);
                             }
                         }
                     }
                 }
                 floatLabel.Content=string.Empty;
-                selectedData=null;
+                //selectedData=null;
                 //Debug.WriteLine(string.Format("在({0},{1})", tier, rank));
             }
         }
@@ -360,5 +420,6 @@ namespace route_table {
         private void routeList_MouseLeave(object sender, MouseEventArgs e) {
             listMouseIn = false;
         }
+
     }
 }

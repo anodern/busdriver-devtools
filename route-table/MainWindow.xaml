@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:route_table"
         mc:Ignorable="d"
-        Title="线路排布工具 by anodern" Height="450" Width="755.905" Closing="Window_Closing">
+        Title="线路排布工具 by anodern" Height="450" Width="755.905" WindowStartupLocation="CenterScreen">
     <Grid>
         <Button x:Name="btn_load" Content="加载" HorizontalAlignment="Left" Height="31" Margin="10,10,0,0" VerticalAlignment="Top" Width="80" Click="btn_load_Click" FontSize="13"/>
         <ListBox x:Name="routeList" HorizontalAlignment="Left" Margin="10,56,0,10" Width="177" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="routeList_SelectionChanged" MouseEnter="routeList_MouseEnter" MouseLeave="routeList_MouseLeave"/>
-        <Grid x:Name="routeGrid" Margin="204,10,10,23" Loaded="routeGrid_Loaded" >
+        <Grid x:Name="routeGrid" Margin="204,56,10,23" Loaded="routeGrid_Loaded" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70*"/>
                 <ColumnDefinition Width="70*"/>
@@ -31,9 +31,13 @@
             <!--<Canvas Background="LightBlue" Canvas.Left="103" Canvas.Top="62" Height="32" x:Name="floatCanvas" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.75" >
                 
             </Canvas>-->
-            <Label x:Name="floatLabel" Content="Label" Height="45" Width="80" Canvas.Left="0" Canvas.Top="0" BorderThickness="2" BorderBrush="#7F94BBFF" Background="#CC85EE5E" FontSize="10" MouseMove="floatLabel_MouseMove" MouseLeftButtonDown="floatLabel_MouseLeftButtonDown" MouseLeftButtonUp="floatLabel_MouseLeftButtonUp" Visibility="Hidden"/>
+            <Label x:Name="floatLabel" Content="Label" Height="45" Width="80" Canvas.Left="0" Canvas.Top="0" BorderThickness="2" BorderBrush="#7F94BBFF" Background="#CC85EE5E" FontSize="10" MouseMove="floatLabel_MouseMove" MouseLeftButtonUp="floatLabel_MouseLeftButtonUp" Visibility="Hidden"/>
         </Canvas>
         <Button x:Name="btn_save" Content="保存" HorizontalAlignment="Left" Height="31" Margin="107,10,0,0" VerticalAlignment="Top" Width="80" Click="btn_save_Click" FontSize="13" IsEnabled="False"/>
         <Label Content="Copyright © 2021 anodern. All rights reserved.   www.anodern.com" Margin="204,0,10,4" Height="19" VerticalAlignment="Bottom" FontSize="10" VerticalContentAlignment="Bottom" Padding="5,3"/>
+        <Label Content="车型：" HorizontalAlignment="Left" Height="24" Margin="380,13,0,0" VerticalAlignment="Top" Width="38"/>
+        <ComboBox x:Name="combo_vehicle" HorizontalAlignment="Left" Margin="423,16,0,0" VerticalAlignment="Top" Width="114" SelectionChanged="vehicleCombo_SelectionChanged"/>
+        <Label Content="线路名：" HorizontalAlignment="Left" Height="24" Margin="204,13,0,0" VerticalAlignment="Top" Width="53"/>
+        <Label x:Name="label_name" Content="" HorizontalAlignment="Left" Margin="257,13,0,0" VerticalAlignment="Top" Width="118" Padding="2,5"/>
     </Grid>
 </Window>

@@ -1,5 +1,5 @@
 ﻿namespace BusDriverFile {
-    class Float3 {
+    public class Float3 {
         public float x;
         public float y;
         public float z;
@@ -19,7 +19,7 @@
             z=br.ReadSingle();
         }
         public override string ToString() {
-            return string.Format("({0:g},{1:g},{2:g})",x,y,z);
+            return string.Format("({0:g}, {1:g}, {2:g})",x,y,z);
         }
     }
 }

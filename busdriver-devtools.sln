@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "route-table", "route-table\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prefab-editor", "prefab-editor\prefab-editor.csproj", "{82BCBE4E-C6AF-46A9-9705-9ADFE380372E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "base-patch", "base-patch\base-patch.csproj", "{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{82BCBE4E-C6AF-46A9-9705-9ADFE380372E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82BCBE4E-C6AF-46A9-9705-9ADFE380372E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82BCBE4E-C6AF-46A9-9705-9ADFE380372E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

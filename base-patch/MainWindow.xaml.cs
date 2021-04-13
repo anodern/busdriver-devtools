@@ -134,17 +134,18 @@ namespace base_patch {
                             if(entry.FullName.Equals("readme.txt")) continue;
 
                             ZipArchiveEntry baseEntry = baseFile.GetEntry(entry.FullName);
-                            if(baseEntry == null) baseEntry = baseFile.CreateEntry(entry.FullName, CompressionLevel.NoCompression);
+                            if(baseEntry != null) baseEntry.Delete();
+                            baseEntry = baseFile.CreateEntry(entry.FullName, CompressionLevel.NoCompression);
 
                             Stream sr = entry.Open();
                             Stream sw = baseEntry.Open();
-                            sw.SetLength(0);
+                            //sw.SetLength(0);
                             byte[] buffer = new byte[2048];
                             int len;
                             while(true) {
                                 len = sr.Read(buffer, 0, buffer.Length);
-                                sw.Write(buffer, 0, len);
                                 if(len==0) break;
+                                sw.Write(buffer, 0, len);
                             }
                             sw.Close();
                             sr.Close();

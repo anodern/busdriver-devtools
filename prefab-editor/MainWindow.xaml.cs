@@ -190,6 +190,7 @@ namespace prefab_editor {
                 });*/
 
             }
+            Debug.WriteLine("a");
         }
 
         private void aa() {

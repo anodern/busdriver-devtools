@@ -8,19 +8,19 @@ namespace BusDriverFile {
     public class PddFile {
         public static PddFile[] prefabs;
         public const uint fileHead = 0x0F;
-        public int nodeCount;
-        public int curveCount;
+        public int nodeCount;   //节点数
+        public int curveCount;  //曲线数
         public int unCount;
-        public int lightCount;
-        public int terCount;
-        public int terVarCount;
+        public int lightCount;  //红绿灯数
+        public int terCount;    //地形数
+        public int terVarCount; //地形变体数
         public int un2Count;
         public int endDataCount;
 
-        public int nodeOffset;
-        public int curveOffset;
+        public int nodeOffset;  //节点offset
+        public int curveOffset; //曲线offset
         public int unOffset;
-        public int lightOffset;
+        public int lightOffset; //红绿灯offset
         public int terOffset;
         public int terNorOffset;
         public int terVarOffset;

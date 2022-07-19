@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chinese-translate", "chinese-translate\chinese-translate.csproj", "{C9F41428-9B2A-491A-8CAB-1964D2F4B4EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChineseTranslate", "ChineseTranslate\ChineseTranslate.csproj", "{C9F41428-9B2A-491A-8CAB-1964D2F4B4EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "route-making-tool", "route-making-tool\route-making-tool.csproj", "{916662F5-9FD7-4AE7-A6B5-2F079593123A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteMakingTool", "RouteMakingTool\RouteMakingTool.csproj", "{916662F5-9FD7-4AE7-A6B5-2F079593123A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "route-table", "route-table\route-table.csproj", "{52916FE2-2169-4E21-9BFA-BE6D9B4694DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteTable", "RouteTable\RouteTable.csproj", "{52916FE2-2169-4E21-9BFA-BE6D9B4694DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prefab-editor", "prefab-editor\prefab-editor.csproj", "{82BCBE4E-C6AF-46A9-9705-9ADFE380372E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrefabEditor", "PrefabEditor\PrefabEditor.csproj", "{82BCBE4E-C6AF-46A9-9705-9ADFE380372E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "base-patch", "base-patch\base-patch.csproj", "{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasePatch", "BasePatch\BasePatch.csproj", "{08EA9A32-35D8-498B-8C5A-FEA1155E6C28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

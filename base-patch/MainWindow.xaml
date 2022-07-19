@@ -1,11 +1,11 @@
-﻿<Window x:Class="BasePatch.MainWindow"
+﻿<Window x:Class="base_patch.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:base_patch"
         mc:Ignorable="d"
-        Title="补丁安装工具" Height="347.5" Width="500" Icon="bitbug_favicon(5).ico" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="补丁安装工具 by anodern" Height="347.5" Width="500" Icon="bitbug_favicon(5).ico" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
